@@ -1,0 +1,76 @@
+
+<!-- Comes from https://bootsnipp.com/snippets/featured/services-blocks -->
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Diké Labs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/style.css"> 
+</head>
+
+<body>
+
+    <h1> Dikê Labs </h1>
+
+    <!-- Search bar -->
+    <form action="/textPage"  method="post">
+    <div id="search_bar" class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" placeholder="Entrez votre question..." name="case_study" value="{{ input }}">
+                    <span class="input-group-addon">
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>  
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <!-- Results -->
+    <div class="container">
+
+        {% if input is not none %}
+            
+            {% for i, elt in similar_documents %}
+                {% set SimilarityPretty = ( elt['similarity'] * 100 ) | round(1) | string + '%'   %}
+
+                    <div class="col-md-3 text-center">
+                        <div class="box">
+                            <a href="{{elt['url']}}" target="_blank" style="text-decoration:none;">
+                                <div class="box-title">
+                                    Pertinence : {{SimilarityPretty}}
+                                </div>
+                                <hr/>
+                                <div class="box-infos">
+                                    {{elt['administration']}}
+                                    <br>
+                                    {{elt['date']}}                                
+                                </div>
+                                <hr/>
+                                <div class="box-keywords">
+                                    <!-- <h1>Mots-clés :</h1> -->
+                                    {% for k in elt['keywords'] %}
+                                        <div class="keyword">{{k}}</div>
+                                    {% endfor %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+</body>

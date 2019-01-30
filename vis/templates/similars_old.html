@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Dikè Labs Proto</title>
+<script type="text/javascript" src="https://d3js.org/d3.v4.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/style.css"> 
+</head>
+<body>
+
+
+    <h1> Dikê Labs </h1>
+    {%for opt in input_types %}
+    <form action="/textPage"  method="post">
+    <label class="radio-inline"><input type="radio" name="input_types" value={{ opt }} checked >{{ opt }}</label>
+    {% endfor %}
+    {% set PlaceHolder = "Apposez un texte ou un lien" %}
+    <textarea id="confirmationText" name = "case_study" class="text" cols=50 rows =10 name="confirmationText" placeholder = {{ PlaceHolder }}>{{ case_study }}</textarea>
+    <br/>
+    <input type="submit" value="Seek & Serve !" class="submitButton">
+    </form>
+{% if case_study is not none %}
+    <ul class="panel-group list-unstyled" id="accordion">
+  {% for i, elt in similar_documents %}
+      {% if i==0 %}
+          {% set CollapseIn = 'panel-collapse collapse in' %}
+      {% else %}
+          {% set CollapseIn = 'panel-collapse collapse' %}
+      {% endif %}	
+      {% set ItemHRef = 'collapse'+(i|string) %}
+      {% set SimilarityPretty = (  elt['similarity'] * 100  ) | round(2)| string + '%'   %}
+       <li class="panel panel-default">
+       <div class="panel-heading">
+                <h4 class="panel-title"><a data-toggle="collapse"  href="{{ '#'+ItemHRef }}"> Pertinence :  {{  SimilarityPretty }} </a> </h4>
+            </div>
+            <div id="{{ ItemHRef }}" class="{{ CollapseIn }}">
+
+                <div class="panel-body">
+		    <div class="col-md-6" id="topKeywords"><strong>{{ elt['document']['resume'] }}</strong></div>
+		    <div class="col-md-6" id='iconeBalance'><a href="{{elt['url'] }}" target="_blank">In detail</a></div>
+                </div>
+            </div>
+       </div>
+       </li>
+<!--</li>-->
+{% endfor %}
+<div class="panel panel-heading" id="loadMore">Load more</div>
+<div class="panel panel-heading" id="showLess">Show less</div>
+{% endif %}
+    </ul>
+</body>
+<script>
+
+$(document).ready(function () {
+    size_li = $("#accordion li").size();
+    x=3;
+    $('#accordion li:lt('+x+')').show();
+    $('#loadMore').click(function () {
+        x= (x+5 <= size_li) ? x+5 : size_li;
+        $('#accordion li:lt('+x+')').show();
+    });
+    $('#showLess').click(function () {
+        x=(x-5<0) ? 3 : x-5;
+        $('#accordion li').not(':lt('+x+')').hide();
+    });
+});
+</script>
+</html>
