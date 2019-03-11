@@ -1,8 +1,0 @@
-{    
-    "host":"vps403306.ovh.net",
-    "port": 3306,
-    "db": "juris",
-    "user": "juriste",
-    "passwd": "Jur1G33k"
-}
-
